@@ -1,0 +1,21 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./backend/data:/app/data
+    environment:
+      DATABASE_URL: "sqlite:///./data/model_proxy.db"
+      ENCRYPTION_KEY: "${ENCRYPTION_KEY:-change-me-32-bytes-key-here!!}"
+      ADMIN_USERNAME: "${ADMIN_USERNAME:-admin}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD:-admin123}"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
